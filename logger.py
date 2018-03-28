@@ -4,6 +4,7 @@ import datetime
 import time
 import psycopg2
 from sense_hat import SenseHat
+import password
 
 def add_humidity(humidity, temp):
                 query = """                                                                            
@@ -12,7 +13,7 @@ def add_humidity(humidity, temp):
     VALUES                                                                                     
         (%s, %s, %s)                                                                           
     """
-                values = ("now",humidity, temp)
+                values = (humidity, temp,"now")
                 cur.execute(query, values)
                 conn.commit()
 
@@ -23,26 +24,27 @@ def add_pressure(pressure, temp):
     VALUES                                                                                     
         (%s, %s, %s)                                                                           
     """
-                values = ("now",pressure, temp)
+                values = (pressure, temp,"now")
                 cur.execute(query, values)
                 conn.commit()
 
                 
-conn = psycopg2.connect('host=pib1 user=pi password=<redacted> dbname=humidity_django_db')
+conn = psycopg2.connect('host=pib1 user=pi password=' + password.get_password() + ' dbname=humidity_django_db')
 cur = conn.cursor()
 loopcount = 0
 sense = SenseHat()
 sense.clear()
 
 pressure = sense.get_pressure()
-temp = sense.get_tempurature()
+temp = sense.get_temperature()
 humidity = sense.get_humidity()
 	
 while True:
 	pressure = sense.get_pressure()
-	temp = sense.get_tempurature()
+	temp = sense.get_temperature()
 	humidity = sense.get_humidity()
         add_pressure(pressure,temp)
 	add_humidity(humidity,temp)
+	print("loopcount " + str(loopcount))
 	loopcount += 1
-	
+	time.sleep(10.0)
