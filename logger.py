@@ -45,7 +45,7 @@ while True:
 	humidity = sense.get_humidity()
 	print("loopcount " + str(loopcount))
 	loopcount += 1
-	if(loopcount %(60) == 0):
+	if(loopcount %(6) == 0):
 		add_pressure(pressure,temp)
 		add_humidity(humidity,temp)
 	sense.show_message("P:" + "{:0.2f}".format(pressure),text_colour=(255,255,0),back_colour=(0,0,255))
