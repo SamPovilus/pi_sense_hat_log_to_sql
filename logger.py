@@ -9,22 +9,22 @@ import password
 def add_humidity(humidity, temp):
                 query = """                                                                            
     INSERT INTO                                                                                
-        humidity_display_humidity (humidity,temp,log_date)                                                                          
+        humidity_display_humidity (humidity,temp,log_date,hostname)                                                                          
     VALUES                                                                                     
-        (%s, %s, %s)                                                                           
+        (%s, %s, %s, %s)                                                                           
     """
-                values = (humidity, temp,"now")
+                values = (humidity, temp, "now", "pib20")
                 cur.execute(query, values)
                 conn.commit()
 
 def add_pressure(pressure, temp):
                 query = """                                                                            
     INSERT INTO                                                                                
-        humidity_display_pressure (pressure,temp,log_date)                                     
+        humidity_display_pressure (pressure,temp,log_date,hostname)                                     
     VALUES                                                                                     
-        (%s, %s, %s)                                                                           
+        (%s, %s, %s, %s)                                                                           
     """
-                values = (pressure, temp,"now")
+                values = (pressure, temp, "now", "pib20")
                 cur.execute(query, values)
                 conn.commit()
 
