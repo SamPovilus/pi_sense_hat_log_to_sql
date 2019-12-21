@@ -5,10 +5,13 @@ import time
 import psycopg2
 from sense_hat import SenseHat
 import password
+from influxdb import InfluxDBClient
+from datetime import datetime
+
 
 def add_humidity(humidity, temp):
                 query = """                                                                            
-    INSERT INTO                                                                                
+    INSERT INTO                                                                                 
         humidity_display_humidity (humidity,temp,log_date,hostname)                                                                          
     VALUES                                                                                     
         (%s, %s, %s, %s)                                                                           
@@ -32,6 +35,10 @@ def add_pressure(pressure, temp):
 conn = psycopg2.connect('host=pib1 user=pi password=' + password.get_password() + ' dbname=humidity_django_db')
 cur = conn.cursor()
 loopcount = 0
+
+client = InfluxDBClient("nas2",8086,"climate")
+
+
 sense = SenseHat()
 sense.clear()
 
@@ -52,3 +59,4 @@ while True:
 	sense.show_message("P:" + "{:0.2f}".format(pressure),text_colour=(0,brightness,brightness),back_colour=(0,0,0))
 	sense.show_message("H:" + "{:0.2f}".format(humidity),text_colour=(brightness,0,0),back_colour=(0,0,0))
 	sense.show_message("T:" + "{:0.2f}".format(temp),text_colour=(0,brightness,0),back_colour=(0,0,0))
+        client.write_points([{"measurement":"climate","tags":{"host":"sense_hat"},"fields":{'pressure': pressure,'humidity':humidity,'tempurature':temp},"time":datetime.now()}],time_precision='s',database='climate')
