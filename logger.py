@@ -10,7 +10,7 @@ from datetime import datetime
 
 loopcount = 0
 
-client = InfluxDBClient("nas2",8086,"climate")
+client = InfluxDBClient("nas2",8086,"admin","test","climate")
 
 
 sense = SenseHat()
@@ -30,4 +30,4 @@ while True:
         sense.show_message("P:" + "{:0.2f}".format(pressure),text_colour=(0,brightness,brightness),back_colour=(0,0,0))
         sense.show_message("H:" + "{:0.2f}".format(humidity),text_colour=(brightness,0,0),back_colour=(0,0,0))
         sense.show_message("T:" + "{:0.2f}".format(temp),text_colour=(0,brightness,0),back_colour=(0,0,0))
-        client.write_points([{"measurement":"climate","tags":{"host":"sense_hat"},"fields":{'pressure': pressure,'humidity':humidity,'tempurature':temp},"time":datetime.now()}],time_precision='s',database='climate')
+        client.write_points([{"measurement":"climate","tags":{"host":"sense_hat"},"fields":{'pressure': pressure,'humidity':humidity,'tempurature':temp},"time":datetime.utcnow()}],time_precision='s',database='climate')
