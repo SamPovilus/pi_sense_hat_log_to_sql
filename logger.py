@@ -18,11 +18,28 @@ def getLoad():
 def getHostname():
         result = subprocess.run(['hostname'], stdout=subprocess.PIPE)
         return (result.stdout.decode().strip())
+
+def getMemory():
+        f = open("/proc/meminfo", "r")
+        memDict = {}
+        for line in f:
+                memDict[line.strip().split()[0]] = line.strip().split()[1]
+        f.close()
+        #print(memDict)
+        memUsedPercent = (1.0-(int(memDict["MemFree:"])/int(memDict["MemTotal:"])))
+        try:
+                swapUsedPercent = (1.0-(int(memDict["SwapFree:"])/int(memDict["SwapTotal:"])))
+        except ZeroDivisionError:
+                swapUsedPercent = -1.0
+        
+        return [memUsedPercent,swapUsedPercent]
         
 hostname = getHostname()
 while True:
         load = getLoad()
+        mem = getMemory()
         print(load)
         print(hostname)
+        print(mem)
         loopcount += 1
         #client.write_points([{"measurement":"climate","tags":{"host":hostname},"fields":{'pressure': pressure,'humidity':humidity,'tempurature':temp},"time":datetime.utcnow()}],time_precision='s',database='climate')
