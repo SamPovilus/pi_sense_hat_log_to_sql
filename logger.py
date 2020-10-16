@@ -39,7 +39,7 @@ def getThermalZones():
         for zone in os.listdir("/sys/class/thermal/"):
                 if "thermal_zone" in zone:
                         f = open("/sys/class/thermal/" + zone + "/temp")
-                        print(f.readline())
+                        print(f.readline().strip())
                         f.close()
         
 hostname = getHostname()
@@ -49,5 +49,6 @@ while True:
         print(load)
         print(hostname)
         print(mem)
+        getThermalZones()
         loopcount += 1
         #client.write_points([{"measurement":"climate","tags":{"host":hostname},"fields":{'pressure': pressure,'humidity':humidity,'tempurature':temp},"time":datetime.utcnow()}],time_precision='s',database='climate')
