@@ -33,6 +33,14 @@ def getMemory():
                 swapUsedPercent = -1.0
         
         return [memUsedPercent,swapUsedPercent]
+
+import os
+def getThermalZones():
+        for zone in os.listdir("/sys/class/thermal/"):
+                if "thermal_zone" in zone:
+                        f = open("/sys/class/thermal/" + zone + "/temp")
+                        print(f.readline())
+                        f.close()
         
 hostname = getHostname()
 while True:
