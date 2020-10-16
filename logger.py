@@ -35,12 +35,13 @@ def getMemory():
         return [memUsedPercent,swapUsedPercent]
 
 import os
+import re
 def getThermalZones():
         thermalValues = []
         for zone in os.listdir("/sys/class/thermal/"):
                 if "thermal_zone" in zone:
                         f = open("/sys/class/thermal/" + zone + "/temp")
-                        thermalValues.append(f.readline().strip())
+                        thermalValues.append({f.readline().strip(),re.findall(r'\d+',zone)})
                         f.close()
         return thermalValues
 
