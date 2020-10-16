@@ -41,7 +41,7 @@ def getThermalZones():
         for zone in os.listdir("/sys/class/thermal/"):
                 if "thermal_zone" in zone:
                         f = open("/sys/class/thermal/" + zone + "/temp")
-                        thermalValues.append({f.readline().strip(),re.findall(r'\d+',zone)})
+                        thermalValues.append({int(re.findall(r'\d+',zone)[0]),int(f.readline().strip())})
                         f.close()
         return thermalValues
 
