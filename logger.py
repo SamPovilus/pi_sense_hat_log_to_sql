@@ -36,12 +36,14 @@ def getMemory():
 
 import os
 def getThermalZones():
+        thermalValues = []
         for zone in os.listdir("/sys/class/thermal/"):
                 if "thermal_zone" in zone:
                         f = open("/sys/class/thermal/" + zone + "/temp")
-                        print(f.readline().strip())
+                        thermalValues.append(f.readline().strip())
                         f.close()
-        
+        return thermalValues
+
 hostname = getHostname()
 while True:
         load = getLoad()
@@ -49,6 +51,7 @@ while True:
         print(load)
         print(hostname)
         print(mem)
-        getThermalZones()
+        thermalZones = getThermalZones()
+        print(thermalZones)
         loopcount += 1
         #client.write_points([{"measurement":"climate","tags":{"host":hostname},"fields":{'pressure': pressure,'humidity':humidity,'tempurature':temp},"time":datetime.utcnow()}],time_precision='s',database='climate')
