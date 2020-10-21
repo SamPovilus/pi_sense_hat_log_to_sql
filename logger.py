@@ -45,6 +45,13 @@ def getThermalZones():
                         f.close()
         return thermalValues
 
+def getSensors():
+        result = subprocess.run(['sensors'], stdout=subprocess.PIPE)
+        result = result.split('\n')
+        for line in result:
+                print("line:" + line)
+        
+
 hostname = getHostname()
 while True:
         load = getLoad()
