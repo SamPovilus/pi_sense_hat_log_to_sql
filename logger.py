@@ -57,12 +57,14 @@ def getSensors():
                         reading =  str(result[lineNum]).split(":")[1].split()[0]
                         if(reading[-1] == 'C'):
                                 print("got a temp")
+                                reading = float(str(re.findall("\d+\.\d+",reading)[0]))
                         elif(str(result[lineNum]).split(":")[1].split()[1][0:3] == "RPM"):
                                 print("got a fan speed")
+                                reading = int(reading)
                         else:
                                 print("not sure " + str(result[lineNum]).split(":")[1].split()[1])
                                 lineNum+= 1
-                        print("device: " + str(device) + " sensor: " + str(sensor) + " reading: " + str(str(reading).encode("UTF-8")))
+                        print("device: " + str(device) + " sensor: " + str(sensor) + " reading: " + str(str(reading)))
                         lineNum += 1
                 lineNum += 1
         
