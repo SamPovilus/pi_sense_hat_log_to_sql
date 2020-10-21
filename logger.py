@@ -47,9 +47,24 @@ def getThermalZones():
 
 def getSensors():
         result = subprocess.run(['sensors'], stdout=subprocess.PIPE)
-        result = result.split('\n')
-        for line in result:
-                print("line:" + line)
+        result = result.stdout.splitlines()
+        lineNum = 0
+        while lineNum < len(result):
+                device = result[lineNum]
+                lineNum += 2
+                while len(result[lineNum]) > 1:
+                        sensor = str(result[lineNum]).split(":")[0]
+                        reading =  str(result[lineNum]).split(":")[1].split()[0]
+                        if(reading[-1] == 'C'):
+                                print("got a temp")
+                        elif(str(result[lineNum]).split(":")[1].split()[1][0:3] == "RPM"):
+                                print("got a fan speed")
+                        else:
+                                print("not sure " + str(result[lineNum]).split(":")[1].split()[1])
+                                lineNum+= 1
+                        print("device: " + str(device) + " sensor: " + str(sensor) + " reading: " + str(str(reading).encode("UTF-8")))
+                        lineNum += 1
+                lineNum += 1
         
 
 hostname = getHostname()
@@ -61,5 +76,6 @@ while True:
         print(mem)
         thermalZones = getThermalZones()
         print(thermalZones)
+        getSensors()
         loopcount += 1
         #client.write_points([{"measurement":"climate","tags":{"host":hostname},"fields":{'pressure': pressure,'humidity':humidity,'tempurature':temp},"time":datetime.utcnow()}],time_precision='s',database='climate')
