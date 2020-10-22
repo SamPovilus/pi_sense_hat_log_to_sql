@@ -13,7 +13,7 @@ def getLoad():
         f = open("/proc/loadavg", "r")
         load = f.readline().strip().split()[1]
         f.close()
-        return ({"load_average":load})
+        return ({"load_average":float(load)})
         
 def getHostname():
         result = subprocess.run(['hostname'], stdout=subprocess.PIPE)
@@ -58,11 +58,9 @@ def getSensors():
                 lineNum += 2
                 while len(result[lineNum]) > 1:
                         match = re.match("^([^:]+):\s*\+*(\d+.\d+)[\s°]([a-zA-Z]+)",(result[lineNum]).decode("utf-8"))
-                        sensor = match[0]
-                        reading =  match[1]
-                        datatype = match[2]
                         lineNum += 1
-                        print("Sensor: " + match.group(1) + " Value: " + match.group(2))
+                        retVal[device + match.group(1) + "(" + match.group(3) + ")"] = match.group(2)
+                        #print("Sensor: " + match.group(1) + " Value: " + match.group(2))
                 lineNum += 1
         
 
