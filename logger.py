@@ -13,7 +13,7 @@ def getLoad():
         f = open("/proc/loadavg", "r")
         load = f.readline().strip().split()[1]
         f.close()
-        return (load)
+        return ({"load_average":load})
         
 def getHostname():
         result = subprocess.run(['hostname'], stdout=subprocess.PIPE)
@@ -32,23 +32,27 @@ def getMemory():
         except ZeroDivisionError:
                 swapUsedPercent = -1.0
         
-        return [memUsedPercent,swapUsedPercent]
+        return {"mem_used":memUsedPercent,"swap_used":swapUsedPercent}
 
 import os
 import re
 def getThermalZones():
-        thermalValues = []
+        thermalValues = {}
         for zone in os.listdir("/sys/class/thermal/"):
                 if "thermal_zone" in zone:
                         f = open("/sys/class/thermal/" + zone + "/temp")
-                        thermalValues.append({int(re.findall(r'\d+',zone)[0]),int(f.readline().strip())})
+                        thermalValues[zone] = (int(f.readline().strip()))
                         f.close()
         return thermalValues
 
 def getSensors():
-        result = subprocess.run(['sensors'], stdout=subprocess.PIPE)
+        try:
+                result = subprocess.run(['sensors'], stdout=subprocess.PIPE)
+        except FileNotFoundError:
+                return {}
         result = result.stdout.splitlines()
         lineNum = 0
+        retVal = {}
         while lineNum < len(result):
                 device = result[lineNum]
                 lineNum += 2
@@ -73,4 +77,4 @@ while True:
         print(thermalZones)
         getSensors()
         loopcount += 1
-        #client.write_points([{"measurement":"climate","tags":{"host":hostname},"fields":{'pressure': pressure,'humidity':humidity,'tempurature':temp},"time":datetime.utcnow()}],time_precision='s',database='climate')
+        #client.write_points([{"measurement":"computer_status","tags":{"host":hostname},"fields":{'pressure': pressure,'humidity':humidity,'tempurature':temp},"time":datetime.utcnow()}],time_precision='s',database='climate')
