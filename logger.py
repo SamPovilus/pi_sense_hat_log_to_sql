@@ -75,6 +75,6 @@ while True:
         thermalZones = getThermalZones()
         print(thermalZones)
         sensors = getSensors()
-        print()
+        print(sensors)
         loopcount += 1
         #client.write_points([{"measurement":"computer_status","tags":{"host":hostname},"fields":{'pressure': pressure,'humidity':humidity,'tempurature':temp},"time":datetime.utcnow()}],time_precision='s',database='climate')
