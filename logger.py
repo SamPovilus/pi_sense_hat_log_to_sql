@@ -59,7 +59,7 @@ def getSensors():
                 while len(result[lineNum]) > 1:
                         match = re.match("^([^:]+):\s*\+*(\d+.\d+)[\s°]([a-zA-Z]+)",(result[lineNum]).decode("utf-8"))
                         lineNum += 1
-                        retVal[device + match.group(1) + "(" + match.group(3) + ")"] = match.group(2)
+                        retVal[device + str(match.group(1)) + "(" + str(match.group(3)) + ")"] = float(match.group(2))
                         #print("Sensor: " + match.group(1) + " Value: " + match.group(2))
                 lineNum += 1
         
