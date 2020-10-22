@@ -58,23 +58,23 @@ def getSensors():
                 lineNum += 2
                 while len(result[lineNum]) > 1:
                         match = re.match("^([^:]+):\s*\+*(\d+.\d+)[\s°]([a-zA-Z]+)",(result[lineNum]).decode("utf-8"))
-                        #print(result[lineNum])
                         lineNum += 1
-                        retVal[device.decode("utf-8") + str(match.group(1)) + "(" + str(match.group(3)) + ")"] = float(match.group(2))
-                        #print("Sensor: " + match.group(1) + " Value: " + match.group(2))
+                        retVal[device.decode("utf-8") + "-" + str(match.group(1))+ "(" + str(match.group(3)) + ")"] = float(match.group(2))
                 lineNum += 1
         return retVal
 
 hostname = getHostname()
+import time
 while True:
         load = getLoad()
         mem = getMemory()
-        print(load)
-        print(hostname)
-        print(mem)
+#        print(load)
+#        print(hostname)
+#        print(mem)
         thermalZones = getThermalZones()
-        print(thermalZones)
+#        print(thermalZones)
         sensors = getSensors()
-        print(sensors)
+#        print(sensors)
         loopcount += 1
-        #client.write_points([{"measurement":"computer_status","tags":{"host":hostname},"fields":{'pressure': pressure,'humidity':humidity,'tempurature':temp},"time":datetime.utcnow()}],time_precision='s',database='climate')
+        client.write_points([{"measurement":"computer_status","tags":{"host":hostname},"fields":{load,mem,thermalZones,sensors},"time":datetime.utcnow()}],time_precision='s',database='climate')
+        time.sleep(60)
