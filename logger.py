@@ -75,6 +75,12 @@ while True:
 #        print(thermalZones)
         sensors = getSensors()
 #        print(sensors)
+        print(loopcount)
         loopcount += 1
-        client.write_points([{"measurement":"computer_status","tags":{"host":hostname},"fields":{load,mem,thermalZones,sensors},"time":datetime.utcnow()}],time_precision='s',database='climate')
+        outputDict = {}
+        outputDict.update(load)
+        outputDict.update(mem)
+        outputDict.update(thermalZones)
+        outputDict.update(sensors)
+        client.write_points([{"measurement":"computer_status","tags":{"host":hostname},"fields":outputDict,"time":datetime.utcnow()}],time_precision='s',database='computer_status')
         time.sleep(60)
