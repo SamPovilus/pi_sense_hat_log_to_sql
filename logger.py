@@ -62,7 +62,7 @@ def getSensors():
                         retVal[str(device) + str(match.group(1)) + "(" + str(match.group(3)) + ")"] = float(match.group(2))
                         #print("Sensor: " + match.group(1) + " Value: " + match.group(2))
                 lineNum += 1
-        
+        return retVal
 
 hostname = getHostname()
 while True:
@@ -73,6 +73,7 @@ while True:
         print(mem)
         thermalZones = getThermalZones()
         print(thermalZones)
-        getSensors()
+        sensors = getSensors()
+        print()
         loopcount += 1
         #client.write_points([{"measurement":"computer_status","tags":{"host":hostname},"fields":{'pressure': pressure,'humidity':humidity,'tempurature':temp},"time":datetime.utcnow()}],time_precision='s',database='climate')
